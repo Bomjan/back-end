@@ -9,9 +9,9 @@ func main() {
 	// 1. Numeric Types
 	// 'int' is for whole numbers.
 	// 'float64' is for decimals (JS equivalent to Number).
-	a := 10        // inferred as int
-	b := 5.5       // inferred as float64
-	
+	a := 10  // inferred as int
+	b := 5.5 // inferred as float64
+
 	// 2. Text and Boolean
 	// 'string' is for text.
 	// 'bool' is for true/false.
@@ -32,7 +32,7 @@ func main() {
 	var defaultString string // "" (empty string)
 
 	fmt.Println("\nZero Values (Default Initializations):")
-	fmt.Printf("int: %d, float: %f, bool: %t, string: %q\n", 
+	fmt.Printf("int: %d, float: %f, bool: %t, string: %q\n",
 		defaultInt, defaultFloat, defaultBool, defaultString)
 
 	// 4. Type Conversion
