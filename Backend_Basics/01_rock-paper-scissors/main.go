@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"rockpaperscs/rps"
+	"strconv"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +28,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func playHandler(w http.ResponseWriter, r *http.Request) {
-	result := rps.PlayRound(1)
+
+	str_result := r.URL.Query().Get("c")
+	userChoice, _ := strconv.Atoi(str_result)
+	result := rps.PlayRound(userChoice)
 
 	// fmt.Println("winner", result.Winner)
 	// fmt.Println("computer choice", result.ComputerChoice)

@@ -21,9 +21,34 @@
       <p class="text-danger" id="result">&nbsp;</p>
       <hr />
       <p>Choose rock, paper, or scissors!</p>
-      <button class="btn btn-outline-secondary">Rock</button>
-      <button class="btn btn-outline-danger">Paper</button>
-      <button class="btn btn-outline-success">Scissors</button>
+      <button class="btn btn-outline-secondary" onclick="choose(0)">
+        Rock
+      </button>
+      <button class="btn btn-outline-danger" onclick="choose(1)">Paper</button>
+      <button class="btn btn-outline-success" onclick="choose(2)">
+        Scissors
+      </button>
     </div>
   </body>
+  <script>
+    function choose(x) {
+      fetch("/play?c=" + x)
+        .then((response) => response.json())
+        .then((data) => {
+          if (x == 0) {
+            document.getElementById("player_choice").innerHTML =
+              "You clicked rock";
+          } else if (x == 1) {
+            document.getElementById("player_choice").innerHTML =
+              "You clicked paper";
+          } else {
+            document.getElementById("player_choice").innerHTML =
+              "You clicked scissors";
+          }
+          document.getElementById("computer_choice").innerHTML =
+            data.ComputerChoice;
+          document.getElementById("result").innerHTML = data.RoundResult;
+        });
+    }
+  </script>
 </html>
