@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== Package and Module Demonstration ===\n")
+	fmt.Println("=== Package and Module Demonstration ===")
 
 	// Example 1: Basic arithmetic with exported functions
 	fmt.Println("Example 1: Calling exported functions from 'calculator' package")
