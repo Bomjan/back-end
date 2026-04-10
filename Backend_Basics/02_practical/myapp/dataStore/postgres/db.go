@@ -4,26 +4,34 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
 const (
-	postgres_host     = "localhost"
-	postgres_port     = "5432"
-	postgres_user     = "POSTGRES_USER"
-	postgres_password = "POSTGRES_PASSWORD"
-	postgres_dbname   = "enroll"
+	defaultPostgresHost   = "localhost"
+	defaultPostgresPort   = "5432"
+	defaultPostgresDBName = "enroll"
 )
 
 var Db *sql.DB
 
 func init() {
+	postgresHost := getEnv("POSTGRES_HOST", defaultPostgresHost)
+	postgresPort := getEnv("POSTGRES_PORT", defaultPostgresPort)
+	postgresUser := os.Getenv("POSTGRES_USER")
+	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
+	postgresDBName := getEnv("POSTGRES_DBNAME", defaultPostgresDBName)
+
+	if postgresUser == "" || postgresPassword == "" {
+		log.Fatal("POSTGRES_USER and POSTGRES_PASSWORD must be set")
+	}
+
 	db_info := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		postgres_host, postgres_port, postgres_user, postgres_password, postgres_dbname,
+		postgresHost, postgresPort, postgresUser, postgresPassword, postgresDBName,
 	)
-	fmt.Println(db_info)
 
 	var err error
 	Db, err = sql.Open("postgres", db_info)
@@ -32,4 +40,13 @@ func init() {
 	} else {
 		log.Println("Database created successfully")
 	}
+}
+
+func getEnv(key, fallback string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+
+	return value
 }
