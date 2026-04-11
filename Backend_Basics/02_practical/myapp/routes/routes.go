@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"log"
+	"myapp/controller"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,6 +16,7 @@ func InitializeRoutes() {
 
 	router.HandleFunc("/home", homeHandler)
 	router.HandleFunc("/home/{course}", homeHandler)
+	router.HandleFunc("/student/add", controller.AddStudent).Methods("POST")
 
 	log.Println("Application running on port", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), router))
