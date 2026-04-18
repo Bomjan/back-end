@@ -4,39 +4,26 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 const (
-	defaultPostgresHost   = "localhost"
-	defaultPostgresPort   = "5432"
-	defaultPostgresDBName = "enroll"
+	postgres_host     = "localhost"
+	postgres_port     = "5432"
+	postgres_user     = "sundrabomjan"
+	postgres_password = "whoam100"
+	postgres_dbname   = "enroll"
 )
 
 var Db *sql.DB
 
 func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, using system environment variables")
-	}
-
-	postgresHost := getEnv("POSTGRES_HOST", defaultPostgresHost)
-	postgresPort := getEnv("POSTGRES_PORT", defaultPostgresPort)
-	postgresUser := os.Getenv("POSTGRES_USER")
-	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
-	postgresDBName := getEnv("POSTGRES_DBNAME", defaultPostgresDBName)
-
-	if postgresUser == "" || postgresPassword == "" {
-		log.Fatal("POSTGRES_USER and POSTGRES_PASSWORD must be set")
-	}
-
 	db_info := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		postgresHost, postgresPort, postgresUser, postgresPassword, postgresDBName,
+		postgres_host, postgres_port, postgres_user, postgres_password, postgres_dbname,
 	)
+	fmt.Println(db_info)
 
 	var err error
 	Db, err = sql.Open("postgres", db_info)
@@ -45,13 +32,4 @@ func init() {
 	} else {
 		log.Println("Database created successfully")
 	}
-}
-
-func getEnv(key, fallback string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return fallback
-	}
-
-	return value
 }

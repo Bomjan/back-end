@@ -2,7 +2,7 @@ package model
 
 import "myapp/dataStore/postgres"
 
-const queryInsertUser = `INSERT INTO student (stdid, firstname, lastname) VALUES ($1, $2, $3, $4);`
+const queryInsertUser = `INSERT INTO student (stdid, firstname, lastname, email) VALUES ($1, $2, $3, $4);`
 
 type Student struct {
 	StdId     int64  `json:"stdId"`

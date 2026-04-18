@@ -23,14 +23,15 @@ func InitializeRoutes() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	p := mux.Vars(r)
+
+	// this takes the anyvalue that is passed after the /home url.
+	// That is how request works. understood for the first time.
+	// In our case we have {course}. so everything passed after the /home is stored in a map with course key
+	p := mux.Vars(r) // r is for all the requests, there is no filtration
 	course := p["course"]
+	fmt.Println(p)
 
-	if course == "" {
-		course = r.URL.Query().Get("course")
-	}
-
-	_, err := w.Write([]byte("Hello World\nThis course is  " + course))
+	_, err := w.Write([]byte("Hello World\nThis course is " + course))
 	if err != nil {
 		fmt.Println(err)
 	}
