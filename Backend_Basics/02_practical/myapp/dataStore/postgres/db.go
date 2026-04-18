@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -18,6 +19,10 @@ const (
 var Db *sql.DB
 
 func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	}
+
 	postgresHost := getEnv("POSTGRES_HOST", defaultPostgresHost)
 	postgresPort := getEnv("POSTGRES_PORT", defaultPostgresPort)
 	postgresUser := os.Getenv("POSTGRES_USER")
