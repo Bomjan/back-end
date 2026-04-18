@@ -73,6 +73,8 @@ func GetAllStudents() ([]Student, error) {
 const queryCreateCourse = `INSERT INTO course (cid, coursename) VALUES ($1, $2);`
 const queryDeleteCourse = `DELETE FROM course WHERE cid=$1 RETURNING cid;`
 const queryUpdateCourse = `UPDATE course SET cid=$1, coursename=$2 WHERE cid=$3 RETURNING cid;`
+const queryGetCourse = `SELECT cid, coursename FROM course WHERE cid=$1;`
+const queryGetAllCourses = `SELECT * FROM course;`
 
 type Course struct {
 	CourseID   int64  `json:"courseId"`
@@ -89,13 +91,27 @@ func (c *Course) Delete() error {
 	return postgres.Db.QueryRow(queryDeleteCourse, c.CourseID).Scan(&c.CourseID)
 }
 
-// func (c *Course) Read() error {
-
-// }
+func (c *Course) Read() error {
+	return postgres.Db.QueryRow(queryGetCourse, c.CourseID).Scan(&c.CourseID, &c.CourseName)
+}
 func (c *Course) Update(oldId int64) error {
 	return postgres.Db.QueryRow(queryUpdateCourse, c.CourseID, c.CourseName, oldId).Scan(&c.CourseID)
 }
 
-// func (c *Course) GetAllCourses() error {
+func GetAllCourses() ([]Course, error) {
+	rows, getErr := postgres.Db.Query(queryGetAllCourses)
+	if getErr != nil {
+		return nil, getErr
+	}
+	courses := []Course{}
 
-// }
+	for rows.Next() {
+		var c Course
+		if dbErr := rows.Scan(&c.CourseID, &c.CourseName); dbErr != nil {
+			return nil, dbErr
+		}
+		courses = append(courses, c)
+	}
+	rows.Close()
+	return courses, nil
+}

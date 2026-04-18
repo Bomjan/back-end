@@ -74,5 +74,39 @@ func DeleteCourse(w http.ResponseWriter, r *http.Request) {
 	httpresp.ResponseWithJSON(w, http.StatusOK, map[string]string{"status": "Deleted Sucessfully"})
 
 }
-func GetCourse(w http.ResponseWriter, r *http.Request)     {}
-func GetAllCourses(w http.ResponseWriter, r *http.Request) {}
+func GetCourse(w http.ResponseWriter, r *http.Request) {
+	cid := mux.Vars(r)["cid"]
+	courseID, idError := getUserId(cid)
+	if idError != nil {
+		httpresp.ResponseWithError(w, http.StatusBadRequest, "Invalid Json, bro")
+		return
+	}
+
+	c := model.Course{CourseID: courseID}
+
+	if getErr := c.Read(); getErr != nil {
+		switch getErr {
+		case sql.ErrNoRows:
+			httpresp.ResponseWithError(w, http.StatusNotFound, "Course Not Found")
+		default:
+			httpresp.ResponseWithError(w, http.StatusInternalServerError, getErr.Error())
+		}
+		return
+	}
+
+	httpresp.ResponseWithJSON(w, http.StatusOK, c)
+}
+func GetAllCourses(w http.ResponseWriter, r *http.Request) {
+	courses, err := model.GetAllCourses()
+
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			httpresp.ResponseWithError(w, http.StatusNotFound, "No Found Found")
+		default:
+			httpresp.ResponseWithError(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+	httpresp.ResponseWithJSON(w, http.StatusOK, courses)
+}
