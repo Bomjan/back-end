@@ -7,6 +7,7 @@ import "myapp/dataStore/postgres"
 const queryInsertUser = `INSERT INTO student (stdid, firstname, lastname, email) VALUES ($1, $2, $3, $4);`
 const queryGetUser = `SELECT stdid, firstname, lastname, email FROM student WHERE stdid=$1;`
 const queryUpdate = `UPDATE student SET stdid=$1, firstname=$2, lastname=$3, email=$4 WHERE stdid=$5 RETURNING stdid`
+const queryDeleteUser = `DELETE FROM student WHERE stdid=$1 RETURNING stdid;`
 
 // Student represents the student table structure.
 // The json tags define how the fields appear in API requests/responses.
@@ -32,4 +33,12 @@ func (s *Student) Read() error {
 
 func (s *Student) Update(oldID int64) error {
 	return postgres.Db.QueryRow(queryUpdate, s.StdId, s.FirstName, s.LastName, s.Email, oldID).Scan(&s.StdId)
+}
+
+func (s *Student) Delete() error {
+	if err := postgres.Db.QueryRow(queryDeleteUser, s.StdId).Scan(&s.StdId); err != nil {
+		return err
+	} else {
+		return nil
+	}
 }

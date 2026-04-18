@@ -21,9 +21,9 @@ func InitializeRoutes() {
 	router.HandleFunc("/home/{course}", homeHandler)
 
 	router.HandleFunc("/student/add", controller.AddStudent).Methods("POST")
-
 	router.HandleFunc("/student/{sid}", controller.GetStud).Methods("GET")
 	router.HandleFunc("/student/{sid}", controller.UpdateStud).Methods("PUT")
+	router.HandleFunc("/student/{sid}", controller.DeleteStud).Methods("DELETE")
 
 	log.Println("Application running on port", port)
 	// ListenAndServe blocks forever - that's why it's wrapped with log.Fatal.
