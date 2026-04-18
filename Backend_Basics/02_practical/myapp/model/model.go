@@ -1,6 +1,8 @@
 package model
 
-import "myapp/dataStore/postgres"
+import (
+	"myapp/dataStore/postgres"
+)
 
 // * Student Model
 
@@ -83,9 +85,10 @@ func (c *Course) Create() error {
 	return err
 }
 
-// func (c *Course) Delete() error {
+func (c *Course) Delete() error {
+	return postgres.Db.QueryRow(queryDeleteCourse, c.CourseID).Scan(&c.CourseID)
+}
 
-// }
 // func (c *Course) Read() error {
 
 // }

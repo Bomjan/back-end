@@ -58,6 +58,21 @@ func UpdateCourse(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(course)
 	}
 }
-func DeleteCourse(w http.ResponseWriter, r *http.Request)  {}
+func DeleteCourse(w http.ResponseWriter, r *http.Request) {
+	cid := mux.Vars(r)["cid"]
+	courseID, idError := getUserId(cid)
+	if idError != nil {
+		httpresp.ResponseWithError(w, http.StatusBadRequest, "The id i got was a bullshit")
+		return
+	}
+	c := model.Course{CourseID: courseID}
+
+	if delErr := c.Delete(); delErr != nil {
+		httpresp.ResponseWithError(w, http.StatusBadRequest, delErr.Error())
+		return
+	}
+	httpresp.ResponseWithJSON(w, http.StatusOK, map[string]string{"status": "Deleted Sucessfully"})
+
+}
 func GetCourse(w http.ResponseWriter, r *http.Request)     {}
 func GetAllCourses(w http.ResponseWriter, r *http.Request) {}
