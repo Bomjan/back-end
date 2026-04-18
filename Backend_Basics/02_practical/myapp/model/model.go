@@ -2,6 +2,8 @@ package model
 
 import "myapp/dataStore/postgres"
 
+// * Student Model
+
 // queryInsertUser is the SQL statement for inserting a new student record.
 // Using parameterized queries ($1, $2, ...) prevents SQL injection - important for security.
 const queryInsertUser = `INSERT INTO student (stdid, firstname, lastname, email) VALUES ($1, $2, $3, $4);`
@@ -64,3 +66,33 @@ func GetAllStudents() ([]Student, error) {
 	rows.Close()
 	return students, nil
 }
+
+// * Course Model
+const queryCreateCourse = `INSERT INTO course (cid, coursename) VALUES ($1, $2);`
+const queryDeleteCourse = `DELETE FROM course WHERE cid=$1 RETURNING cid;`
+const queryUpdateCourse = `UPDATE course SET cid=$1, coursename=$2 WHERE cid=$3 RETURNING cid;`
+
+type Course struct {
+	CourseID   int64  `json:"courseId"`
+	CourseName string `json:"courseName"`
+}
+
+func (c *Course) Create() error {
+	_, err := postgres.Db.Exec(queryCreateCourse, c.CourseID, c.CourseName)
+
+	return err
+}
+
+// func (c *Course) Delete() error {
+
+// }
+// func (c *Course) Read() error {
+
+// }
+func (c *Course) Update(oldId int64) error {
+	return postgres.Db.QueryRow(queryUpdateCourse, c.CourseID, c.CourseName, oldId).Scan(&c.CourseID)
+}
+
+// func (c *Course) GetAllCourses() error {
+
+// }
