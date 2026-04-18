@@ -145,3 +145,12 @@ func DeleteStud(w http.ResponseWriter, r *http.Request) {
 	}
 	httpresp.ResponseWithJSON(w, http.StatusOK, map[string]string{"status": "Student Deleted"})
 }
+
+func GetAllStuds(w http.ResponseWriter, r *http.Request) {
+	students, err := model.GetAllStudents()
+	if err != nil {
+		httpresp.ResponseWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	httpresp.ResponseWithJSON(w, http.StatusOK, students)
+}

@@ -8,6 +8,7 @@ const queryInsertUser = `INSERT INTO student (stdid, firstname, lastname, email)
 const queryGetUser = `SELECT stdid, firstname, lastname, email FROM student WHERE stdid=$1;`
 const queryUpdate = `UPDATE student SET stdid=$1, firstname=$2, lastname=$3, email=$4 WHERE stdid=$5 RETURNING stdid`
 const queryDeleteUser = `DELETE FROM student WHERE stdid=$1 RETURNING stdid;`
+const queryGetAllStudents = `SELECT * FROM student;`
 
 // Student represents the student table structure.
 // The json tags define how the fields appear in API requests/responses.
@@ -41,4 +42,25 @@ func (s *Student) Delete() error {
 	} else {
 		return nil
 	}
+}
+
+func GetAllStudents() ([]Student, error) {
+	rows, getErr := postgres.Db.Query(queryGetAllStudents)
+
+	if getErr != nil {
+		return nil, getErr
+	}
+
+	// create a slice of students from rows
+	students := []Student{}
+	for rows.Next() {
+		var s Student
+		dbErr := rows.Scan(&s.StdId, &s.FirstName, &s.LastName, &s.Email)
+		if dbErr != nil {
+			return nil, dbErr
+		}
+		students = append(students, s)
+	}
+	rows.Close()
+	return students, nil
 }
