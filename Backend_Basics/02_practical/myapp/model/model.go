@@ -116,19 +116,35 @@ func GetAllCourses() ([]Course, error) {
 	return courses, nil
 }
 
-// * Signup
+// * Signup & Login
 
 const querysignup = `INSERT INTO admin (firstname, lastname, email, password) VALUES ($1, $2, $3, $4);`
+const queryReadAdmin = `SELECT firstname, lastname, email, password FROM admin WHERE email=$1;`
 
-type Signup struct {
+type Admin struct {
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 }
 
-func (s *Signup) Create() error {
+type Login struct {
+	Email    string
+	Password string
+}
+
+type LoginResponse struct {
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+	Email     string `json:"email"`
+}
+
+func (s *Admin) Create() error {
 	_, err := postgres.Db.Exec(querysignup, s.FirstName, s.LastName, s.Email, s.Password)
 
 	return err
+}
+
+func (l *Admin) Read() error {
+	return postgres.Db.QueryRow(queryReadAdmin, l.Email).Scan(&l.FirstName, &l.LastName, &l.Email, &l.Password)
 }
