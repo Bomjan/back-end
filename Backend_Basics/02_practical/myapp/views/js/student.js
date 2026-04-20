@@ -1,6 +1,18 @@
 function addStudent() {
   var data = getFormData();
 
+  var sid = data.stdId;
+
+  if (isNaN(sid)) {
+    alert("Enter valid student id");
+    return;
+  } else if (data.email == "") {
+    alert("Email cannot be empty");
+    return;
+  } else if (data.fname == "") {
+    alert("First name cannot be empty");
+  }
+
   console.log("Sending data:", data);
 
   console.log(data);
@@ -9,29 +21,29 @@ function addStudent() {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json; charset=UTF-8" },
+    credentials: "include",
   })
     .then((res1) => {
-      var sid = data.stdId;
-
-      if (isNaN(sid)) {
-        alert("Enter valid student id");
-        return;
-      } else if (data.email == "") {
-        alert("Email cannot be empty");
-        return;
-      } else if (data.fname == "") {
-        alert("First name cannot be empty");
-      }
-
       if (res1.ok) {
-        fetch("/student/" + sid)
+        fetch("/student/" + sid, {
+          credentials: "include",
+        })
           .then((res2) => res2.text())
           .then((dat) => showStudent(dat));
       } else {
-        throw new Error(res1.statusText);
+        throw new Error(res1.status);
       }
     })
-    .catch((e) => alert(e));
+    .catch((e) => {
+      if (e.message == 303) {
+        alert("User not logged in");
+        window.open("index.html", "_self");
+      } else if (e.message == 500) {
+        alert("Internal Server Error");
+      } else if (e.message == 401) {
+        alert("You are not authorized");
+      }
+    });
 
   resetForm();
 }
@@ -61,7 +73,9 @@ function resetForm() {
 }
 
 window.onload = function () {
-  fetch("/student")
+  fetch("/student", {
+    credentials: "include",
+  })
     .then((res) => res.text())
     .then((data) => {
       data = JSON.parse(data);
@@ -94,6 +108,7 @@ function update(sid) {
     method: "PUT",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json; charset=UTF-8" },
+    credentials: "include",
   }).then((res) => {
     if (res.ok) {
       selectedRow.cells[0].innerHTML = data.stdId;
@@ -130,6 +145,7 @@ function deleteStudent(r) {
     fetch("/student/" + sid, {
       method: "DELETE",
       headers: { "Content-Type": "application/json; charset=UTF-8" },
+      credentials: "include",
     }).then((res) => {
       if (res.ok) {
         console.log("Deleted sucessfylly");

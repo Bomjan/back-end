@@ -25,6 +25,12 @@ import (
 // - Closing the request body prevents resource leaks under high load.
 
 func AddStudent(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	var stud model.Student
 
 	// Debug: read raw body
@@ -78,6 +84,12 @@ func AddStudent(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetStud(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	sid := mux.Vars(r)["sid"]
 	stdId, idErr := getUserId(sid)
 	if idErr != nil {
@@ -111,6 +123,12 @@ func getUserId(userIdParam string) (int64, error) {
 }
 
 func UpdateStud(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	old_sid := mux.Vars(r)["sid"]
 	old_stdId, idErr := getUserId(old_sid)
 
@@ -141,6 +159,12 @@ func UpdateStud(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteStud(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	sid := mux.Vars(r)["sid"]
 
 	stdId, idErr := getUserId(sid)
@@ -157,6 +181,12 @@ func DeleteStud(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllStuds(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	students, err := model.GetAllStudents()
 	if err != nil {
 		httpresp.ResponseWithError(w, http.StatusBadRequest, err.Error())

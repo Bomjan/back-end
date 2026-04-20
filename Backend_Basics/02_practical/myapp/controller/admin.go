@@ -17,7 +17,7 @@ func VerifyCookie(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 
-	if cookie.Value != "my-cookie" {
+	if cookie.Value != "my-value" {
 		httpresp.ResponseWithError(w, http.StatusUnauthorized, "cookies does not match")
 		return false
 	}
