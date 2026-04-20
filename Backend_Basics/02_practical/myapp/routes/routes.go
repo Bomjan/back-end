@@ -34,7 +34,7 @@ func InitializeRoutes() {
 
 	router.HandleFunc("/signup", controller.Signup).Methods("POST")
 	router.HandleFunc("/login", controller.Login).Methods("POST")
-	router.HandleFunc("/logout", controller.Login)
+	router.HandleFunc("/logout", controller.Logout)
 
 	// Serve Static Files
 	fhandler := http.FileServer(http.Dir("./views"))

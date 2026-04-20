@@ -21,13 +21,10 @@ function addStudent() {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json; charset=UTF-8" },
-    credentials: "include",
   })
     .then((res1) => {
       if (res1.ok) {
-        fetch("/student/" + sid, {
-          credentials: "include",
-        })
+        fetch("/student/" + sid)
           .then((res2) => res2.text())
           .then((dat) => showStudent(dat));
       } else {
@@ -73,9 +70,7 @@ function resetForm() {
 }
 
 window.onload = function () {
-  fetch("/student", {
-    credentials: "include",
-  })
+  fetch("/student")
     .then((res) => res.text())
     .then((data) => {
       data = JSON.parse(data);
@@ -108,7 +103,6 @@ function update(sid) {
     method: "PUT",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json; charset=UTF-8" },
-    credentials: "include",
   }).then((res) => {
     if (res.ok) {
       selectedRow.cells[0].innerHTML = data.stdId;
@@ -145,7 +139,6 @@ function deleteStudent(r) {
     fetch("/student/" + sid, {
       method: "DELETE",
       headers: { "Content-Type": "application/json; charset=UTF-8" },
-      credentials: "include",
     }).then((res) => {
       if (res.ok) {
         console.log("Deleted sucessfylly");

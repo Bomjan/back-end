@@ -13,6 +13,11 @@ import (
 
 func AddCourse(w http.ResponseWriter, r *http.Request) {
 
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	var course model.Course
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&course); err != nil {
@@ -31,6 +36,12 @@ func AddCourse(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateCourse(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	cid := mux.Vars(r)["cid"]
 	courseID, cError := getUserId(cid)
 	if cError != nil {
@@ -59,6 +70,12 @@ func UpdateCourse(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func DeleteCourse(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	cid := mux.Vars(r)["cid"]
 	courseID, idError := getUserId(cid)
 	if idError != nil {
@@ -75,6 +92,12 @@ func DeleteCourse(w http.ResponseWriter, r *http.Request) {
 
 }
 func GetCourse(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	cid := mux.Vars(r)["cid"]
 	courseID, idError := getUserId(cid)
 	if idError != nil {
@@ -97,6 +120,12 @@ func GetCourse(w http.ResponseWriter, r *http.Request) {
 	httpresp.ResponseWithJSON(w, http.StatusOK, c)
 }
 func GetAllCourses(w http.ResponseWriter, r *http.Request) {
+
+	// Verify cookie
+	if !VerifyCookie(w, r) {
+		return
+	}
+
 	courses, err := model.GetAllCourses()
 
 	if err != nil {
