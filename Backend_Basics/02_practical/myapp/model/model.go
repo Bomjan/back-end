@@ -115,3 +115,20 @@ func GetAllCourses() ([]Course, error) {
 	rows.Close()
 	return courses, nil
 }
+
+// * Signup
+
+const querysignup = `INSERT INTO admin (firstname, lastname, email, password) VALUES ($1, $2, $3, $4);`
+
+type Signup struct {
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
+func (s *Signup) Create() error {
+	_, err := postgres.Db.Exec(querysignup, s.FirstName, s.LastName, s.Email, s.Password)
+
+	return err
+}

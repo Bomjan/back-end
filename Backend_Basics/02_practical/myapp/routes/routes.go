@@ -32,6 +32,8 @@ func InitializeRoutes() {
 	router.HandleFunc("/course/{cid}", controller.UpdateCourse).Methods("PUT")
 	router.HandleFunc("/course/add", controller.AddCourse).Methods("POST")
 
+	router.HandleFunc("/signup", controller.Signup).Methods("POST")
+
 	// Serve Static Files
 	fhandler := http.FileServer(http.Dir("./views"))
 	router.PathPrefix("/").Handler(fhandler)
