@@ -32,6 +32,10 @@ func InitializeRoutes() {
 	router.HandleFunc("/course/{cid}", controller.UpdateCourse).Methods("PUT")
 	router.HandleFunc("/course/add", controller.AddCourse).Methods("POST")
 
+	// Serve Static Files
+	fhandler := http.FileServer(http.Dir("./views"))
+	router.PathPrefix("/").Handler(fhandler)
+
 	log.Println("Application running on port", port)
 	// ListenAndServe blocks forever - that's why it's wrapped with log.Fatal.
 	// If the server stops, the application exits.

@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"io"
 	"myapp/model"
 	"net/http"
 	"strconv"
@@ -23,6 +26,12 @@ import (
 
 func AddStudent(w http.ResponseWriter, r *http.Request) {
 	var stud model.Student
+
+	// Debug: read raw body
+	bodyBytes, _ := io.ReadAll(r.Body)
+	fmt.Printf("Raw JSON: %s\n", string(bodyBytes))
+	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
 	decoder := json.NewDecoder(r.Body)
 
 	// Decode the incoming JSON request body into the student struct.
@@ -65,6 +74,7 @@ func AddStudent(w http.ResponseWriter, r *http.Request) {
 
 	// From utils
 	httpresp.ResponseWithJSON(w, http.StatusCreated, "Student Added")
+	fmt.Println("Student Create", stud)
 }
 
 func GetStud(w http.ResponseWriter, r *http.Request) {
