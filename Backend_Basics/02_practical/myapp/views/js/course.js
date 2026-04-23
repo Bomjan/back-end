@@ -37,9 +37,6 @@ function getCourse() {
     .then((obj) => obj.forEach((c) => showCourse(c)));
 }
 
-console.log("Logging the response from /course");
-// getCourse();
-
 function showCourse(course) {
   let table = $("myTable");
   // table.innerHTML = "";
@@ -73,7 +70,7 @@ function updateCourse(r) {
   const selectedRow = r.parentElement.parentElement;
   const cid = selectedRow.cells[0].textContent;
   const oldData = {
-    courseId: parseInt(selectedRow.cells[0].textContent),
+    courseId: parseInt(cid),
     courseName: selectedRow.cells[1].textContent,
   };
   updateForm(cid, oldData);
