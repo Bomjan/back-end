@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"database/sql"
 	"encoding/json"
 	"myapp/model"
 	"myapp/utils/date"
 	httpresp "myapp/utils/httpResp"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 func Enroll(w http.ResponseWriter, r *http.Request) {
@@ -34,5 +38,27 @@ func Enroll(w http.ResponseWriter, r *http.Request) {
 
 	// No error
 	httpresp.ResponseWithJSON(w, http.StatusCreated, map[string]string{"status": "enrolled successfully"})
+
+}
+
+func GetEnroll(w http.ResponseWriter, r *http.Request) {
+	sid := mux.Vars(r)["sid"]
+	cid := mux.Vars(r)["cid"]
+	std_id, _ := strconv.ParseInt(sid, 10, 64)
+	cid_id, _ := strconv.ParseInt(cid, 10, 64)
+
+	e := model.Enroll{StdId: std_id, CourseId: cid_id}
+	if getErr := e.Get(); getErr != nil {
+		switch getErr {
+		case sql.ErrNoRows:
+			httpresp.ResponseWithError(w, http.StatusNotFound, "No such enrollments")
+			return
+		default:
+			httpresp.ResponseWithError(w, http.StatusInternalServerError, getErr.Error())
+			return
+		}
+	}
+
+	httpresp.ResponseWithJSON(w, http.StatusOK, e)
 
 }

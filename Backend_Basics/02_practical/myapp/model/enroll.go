@@ -3,6 +3,7 @@ package model
 import "myapp/dataStore/postgres"
 
 const queryEnrollStud = `INSERT INTO enroll (std_id, course_id, date_enrolled) VALUES ($1, $2, $3) RETURNING std_id ;`
+const queryGetEnroll = `SELECT std_id, course_id, date_enrolled FROM enroll WHERE std_id=$1 and course_id=$2;`
 
 type Enroll struct {
 	StdId        int64  `json:"stdid"`
@@ -16,4 +17,6 @@ func (e *Enroll) EnrollStud() error {
 	return err
 }
 
-func (e *Enroll) GetEnroll()
+func (e *Enroll) Get() error {
+	return postgres.Db.QueryRow(queryGetEnroll, e.StdId, e.CourseId).Scan(&e.StdId, &e.CourseId, &e.DateEnrolled)
+}
