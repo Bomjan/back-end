@@ -20,3 +20,4 @@ func (e *Enroll) EnrollStud() error {
 func (e *Enroll) Get() error {
 	return postgres.Db.QueryRow(queryGetEnroll, e.StdId, e.CourseId).Scan(&e.StdId, &e.CourseId, &e.DateEnrolled)
 }
+
